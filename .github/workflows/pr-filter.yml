@@ -6,7 +6,6 @@ on:
 
 permissions:
   pull-requests: write
-  issues: write
 
 jobs:
   check-template:
@@ -21,4 +20,4 @@ jobs:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
             const script = require('.github/workflows/scripts/pr-filter.js');
-            await script({github, context});
+            await script({ github, context });

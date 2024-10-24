@@ -1,4 +1,4 @@
-function isDescEmpty(rawMarkdown) {
+function noDescription(rawMarkdown) {
   const commentRegex = /<!--[\s\S]*?-->/g;
   const markdown = rawMarkdown.replace(commentRegex, '');
 
@@ -26,26 +26,17 @@ module.exports = async ({ github, context }) => {
   const pr = context.payload.pull_request;
   const body = pr.body === null ? '' : pr.body.trim();
 
-  if (body === '' || noTypes(body) || isDescEmpty(body)) {
-    // Close the PR
+  if (body === '' || noTypes(body) || noDescription(body)) {
     await github.rest.pulls.update({
       ...context.repo,
       pull_number: pr.number,
       state: 'closed'
     });
 
-    // Leave a comment
     await github.rest.issues.createComment({
       ...context.repo,
       issue_number: pr.number,
-      body: "Oops, looks like you accidentally submitted an empty pull request, don't worry we'll close it for you."
-    });
-
-    // Add a label
-    await github.rest.issues.addLabels({
-      ...context.repo,
-      issue_number: pr.number,
-      labels: ['spam']
+      body: 'Oops, it looks like your pull request is empty. No worries, we’ll close it for you.'
     });
   }
 };
