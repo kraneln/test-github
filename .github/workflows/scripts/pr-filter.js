@@ -24,7 +24,7 @@ function noTypes(body) {
 
 module.exports = async ({ github, context }) => {
   const pr = context.payload.pull_request;
-  const body = pr.body.trim();
+  const body = pr.body === null ? '' : pr.body.trim();
 
   if (body === '' || noTypes(body) || isDescEmpty(body)) {
     // Close the PR
