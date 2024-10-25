@@ -21,15 +21,14 @@ jobs:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           result-encoding: string
           script: |
-            const script = require('.github/workflows/scripts/pr-filter.js');
-            const result = await script({ github, context });
-            core.setOutput('result', result);
+            const pr = context.payload.pull_request;
+            console.log(`body: '${pr.body}'`);
 
-      - name: Read result
-        run: echo ${{ steps.intercept.outputs.result }}
+      # - name: Read result
+      #   run: echo ${{ steps.intercept.outputs.result }}
 
       - name: Abort due to invalid PR
-        if: ${{ steps.intercept.outputs.result == 'false' }}
+        if: ${{ steps.intercept.outputs.result != 'true' }}
         run: exit 1
 
   test:
