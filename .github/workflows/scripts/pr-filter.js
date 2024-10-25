@@ -11,12 +11,12 @@ function hasValidDescription(markdown) {
 
 module.exports = async ({ github, context }) => {
   const pr = context.payload.pull_request;
-  const body = pr.body ? pr.body.trim() : '';
+  const body = pr.body === null ? '' : pr.body.trim();
   const markdown = body.replace(/<!--[\s\S]*?-->/g, '');
 
   const isValid =
     pr.labels.length > 0 || // PR create by dependabot would have labels
-    (body && hasTypesChecked(markdown) && hasValidDescription(markdown));
+    (body !== '' && hasTypesChecked(markdown) && hasValidDescription(markdown));
 
   if (!isValid) {
     await github.rest.pulls.update({
