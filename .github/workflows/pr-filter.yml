@@ -24,6 +24,9 @@ jobs:
             const result = await script({ github, context });
             core.setOutput('result', result);
 
+      - name: Read result
+        run: echo ${{ steps.intercept.outputs.result }}
+
       - name: Abort due to invalid PR
         if: ${{ steps.intercept.outputs.result == 'false' }}
         run: exit 1
