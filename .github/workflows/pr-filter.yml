@@ -2,15 +2,11 @@ name: Block Invalid PRs
 
 on:
   pull_request_target:
-    types: [opened, edited]
+    types: [opened, reopened, edited]
 
 jobs:
   check-template:
     runs-on: ubuntu-latest
-    # permissions:
-    # contents: write
-    # pull-requests: write
-    # issues: write
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
