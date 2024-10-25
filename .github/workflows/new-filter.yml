@@ -1,4 +1,4 @@
-name: Block Invalid PRs
+name: Block Invalid PR 2
 
 on:
   pull_request_target:
