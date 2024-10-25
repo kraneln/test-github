@@ -4,12 +4,14 @@ on:
   pull_request:
     types: [opened, edited]
 
-permissions:
-  pull-requests: write
-
 jobs:
   check-template:
     runs-on: ubuntu-latest
+    permissions:
+      pull-requests: write
+      # write-all
+      # issues: write
+      # contents: write
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
