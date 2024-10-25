@@ -1,0 +1,12 @@
+name: build
+
+on: push
+
+jobs:
+  check-env:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check secrets
+        run: |
+          echo "TEMP: ${{ secrets.TEMP_KEY}}."
+          echo "Default: ${{ secrets.GITHUB_TOKEN }}."
