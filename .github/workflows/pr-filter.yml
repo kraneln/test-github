@@ -7,11 +7,11 @@ on:
 jobs:
   check-template:
     runs-on: ubuntu-latest
-    permissions:
-      pull-requests: write
-      # write-all
-      # issues: write
-      # contents: write
+    # permissions:
+    #   pull-requests: write
+    # write-all
+    # issues: write
+    # contents: write
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -19,7 +19,7 @@ jobs:
       - name: Check PR body against template
         uses: actions/github-script@v7
         with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
+          github-token: ${{ secrets.LAB_TOKEN }}
           script: |
             const script = require('.github/workflows/scripts/pr-filter.js');
             await script({ github, context });
