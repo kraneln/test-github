@@ -1,14 +1,16 @@
 name: Block Invalid PRs
 
 on:
-  pull_request:
+  pull_request_target:
     types: [opened, edited]
 
 jobs:
   check-template:
     runs-on: ubuntu-latest
-    # permissions:
-    #   pull-requests: write
+    permissions:
+      contents: write
+      pull-requests: write
+      issues: write
     # write-all
     # issues: write
     # contents: write
@@ -16,13 +18,10 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Check secrets
-        run: echo [${{ secrets.TEMP_KEY }}]
-
       - name: Check PR body against template
         uses: actions/github-script@v7
         with:
-          github-token: ${{ secrets.LAB_PAT }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
             const script = require('.github/workflows/scripts/pr-filter.js');
             await script({ github, context });
