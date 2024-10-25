@@ -1,32 +1,30 @@
-function noDescription(rawMarkdown) {
-  const commentRegex = /<!--[\s\S]*?-->/g;
-  const markdown = rawMarkdown.replace(commentRegex, '');
-
-  const descriptionRegex = /## Description\s*([\s\S]*?)(##|$)/;
-  const match = markdown.match(descriptionRegex);
-
-  if (match) {
-    const descriptionContent = match[1].trim();
-    return descriptionContent.length === 0;
+function noTypes(markdown) {
+  if (/## Type of change/.test(markdown) && /- \[x\]/i.test(markdown)) {
+    return false;
   }
-  return false;
+  return true;
 }
 
-function noTypes(body) {
+function noDescription(markdown) {
   return (
-    body.includes('[ ] Bug fix') &&
-    body.includes('[ ] New feature') &&
-    body.includes('[ ] Improvement') &&
-    body.includes('[ ] Breaking change') &&
-    body.includes('[ ] Documentation update')
+    /## Description/.test(markdown) === false ||
+    /## Description\s*\n\s*## \w+/.test(markdown) ||
+    /## Description\s*\n\s*$/.test(markdown)
   );
 }
 
 module.exports = async ({ github, context }) => {
   const pr = context.payload.pull_request;
-  const body = pr.body === null ? '' : pr.body.trim();
 
-  if (body === '' || noTypes(body) || noDescription(body)) {
+  if (pr.labels.length > 0) {
+    // Skip if the PR is already labeled (typically created by a deps-bot.)
+    return;
+  }
+
+  const body = pr.body === null ? '' : pr.body.trim();
+  const markdown = body.replace(/<!--[\s\S]*?-->/g, '');
+
+  if (body === '' || noTypes(markdown) || noDescription(markdown)) {
     await github.rest.pulls.update({
       ...context.repo,
       pull_number: pr.number,
@@ -36,7 +34,7 @@ module.exports = async ({ github, context }) => {
     await github.rest.issues.createComment({
       ...context.repo,
       issue_number: pr.number,
-      body: 'Oops, it looks like your pull request is empty. No worries, we’ll close it for you.'
+      body: "Oops, it seems you've submitted an invalid pull request. No worries, we'll close it for you."
     });
   }
 };
