@@ -1,0 +1,20 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - main
+  workflow_call:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Run CI steps
+        run: echo "Running CI jobs..."
+  check-commit:
+    needs: build
+    uses: ./.github/workflows/lint.yml
