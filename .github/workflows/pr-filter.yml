@@ -7,10 +7,10 @@ on:
 jobs:
   check-template:
     runs-on: ubuntu-latest
-    permissions:
-      # contents: write
-      pull-requests: write
-      # issues: write
+    # permissions:
+    # contents: write
+    # pull-requests: write
+    # issues: write
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
