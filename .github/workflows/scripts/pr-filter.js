@@ -13,6 +13,7 @@ module.exports = async ({ github, context }) => {
   const pr = context.payload.pull_request;
   const body = pr.body === null ? '' : pr.body.trim();
   const markdown = body.replace(/<!--[\s\S]*?-->/g, '');
+  const action = context.payload.action;
 
   const isValid =
     pr.labels.length > 0 || // PR create by Dependabot would have labels
@@ -30,7 +31,7 @@ module.exports = async ({ github, context }) => {
     await github.rest.issues.createComment({
       ...context.repo,
       issue_number: pr.number,
-      body: "Oops, it seems you've submitted an invalid pull request. No worries, we'll close it for you."
+      body: `Oops, it seems you've ${action} an invalid pull request. No worries, we'll close it for you.`
     });
   }
 
