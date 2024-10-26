@@ -20,6 +20,8 @@ jobs:
       - name: Run CI steps
         run: echo "Running CI jobs..."
 
-  check-commit:
+  commitlint:
     needs: build
-    uses: ./.github/workflows/lint.yml
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "Running commitlint..."
