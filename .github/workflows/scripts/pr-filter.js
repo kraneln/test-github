@@ -1,8 +1,8 @@
-function hasTypesChecked(markdown) {
+function hasTypes(markdown) {
   return /## Type of change/.test(markdown) && /-\s*\[x\]/i.test(markdown);
 }
 
-function hasValidDescription(markdown) {
+function hasDescription(markdown) {
   return (
     /## Description/.test(markdown) &&
     !/## Description\s*\n\s*(##|\s*$)/.test(markdown)
@@ -17,9 +17,7 @@ module.exports = async ({ github, context }) => {
 
   const isValid =
     pr.labels.length > 0 || // PR create by Dependabot would have labels
-    (markdown !== '' &&
-      hasTypesChecked(markdown) &&
-      hasValidDescription(markdown));
+    (markdown !== '' && hasTypes(markdown) && hasDescription(markdown));
 
   if (!isValid) {
     await github.rest.pulls.update({
