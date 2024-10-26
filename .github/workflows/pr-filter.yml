@@ -1,4 +1,4 @@
-name: Block Invalid PR
+name: PR Filter
 
 on:
   pull_request_target:
