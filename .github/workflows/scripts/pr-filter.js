@@ -15,8 +15,10 @@ module.exports = async ({ github, context }) => {
   const markdown = body.replace(/<!--[\s\S]*?-->/g, '');
 
   const isValid =
-    pr.labels.length > 0 || // PR create by dependabot would have labels
-    (body !== '' && hasTypesChecked(markdown) && hasValidDescription(markdown));
+    pr.labels.length > 0 || // PR create by Dependabot would have labels
+    (markdown !== '' &&
+      hasTypesChecked(markdown) &&
+      hasValidDescription(markdown));
 
   if (!isValid) {
     await github.rest.pulls.update({
