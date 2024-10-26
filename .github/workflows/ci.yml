@@ -9,13 +9,26 @@ on:
   pull_request:
     types: [synchronize]
   workflow_call:
+  workflow_dispatch:
 
 jobs:
   build:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        ruby: ['3.1', '3.2']
+
     steps:
-      - name: Checkout code
+      - name: Checkout
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # for posts's lastmod
+
+      - name: Setup Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: ${{ matrix.ruby }}
+          bundler-cache: true
 
       - name: Run CI steps
         run: echo "Running CI jobs..."
@@ -24,4 +37,5 @@ jobs:
     needs: build
     runs-on: ubuntu-latest
     steps:
-      - run: echo "Running commitlint..."
+      - name: Lint commit messages
+        uses: wagoid/commitlint-github-action@v6
