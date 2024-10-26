@@ -6,6 +6,8 @@ on:
       - main
     paths-ignore:
       - '.github/**'
+  pull_request:
+    types: [synchronize]
   workflow_call:
 
 jobs:
@@ -17,6 +19,7 @@ jobs:
 
       - name: Run CI steps
         run: echo "Running CI jobs..."
+
   check-commit:
     needs: build
     uses: ./.github/workflows/lint.yml
