@@ -24,11 +24,16 @@ jobs:
         with:
           fetch-depth: 0 # for posts's lastmod
 
-      - name: Setup Ruby
-        uses: ruby/setup-ruby@v1
-        with:
-          ruby-version: ${{ matrix.ruby }}
-          bundler-cache: true
+      # - name: Setup Ruby
+      #   uses: ruby/setup-ruby@v1
+      #   with:
+      #     ruby-version: ${{ matrix.ruby }}
+      #     bundler-cache: true
+
+      - name: Get modified files
+        run: |
+          echo "Modified files in the PR:"
+          git diff --name-only ${{ github.event.before }} ${{ github.sha }}
 
       - name: Run CI steps
         run: echo "Running CI jobs..."
